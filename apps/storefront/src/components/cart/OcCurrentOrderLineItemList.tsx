@@ -1,13 +1,14 @@
+import { LineItem } from 'ordercloud-javascript-sdk'
 import { FunctionComponent } from 'react'
 import OcLineItemList from './OcLineItemList'
-import { LineItem } from 'ordercloud-javascript-sdk'
 
 interface OcCurrentOrderLineItemListProps {
-  emptyMessage?: string
-  editable?: boolean
-  productType?: string
-  lineItems?: LineItem[]
-  onChange: (newLineItem:LineItem) => void
+  emptyMessage?: string;
+  editable?: boolean;
+  productType?: string;
+  lineItems?: LineItem[];
+  onChange: (newLineItem: LineItem) => void;
+  tabIndex?: number
 }
 
 const OcCurrentOrderLineItemList: FunctionComponent<OcCurrentOrderLineItemListProps> = ({
@@ -15,7 +16,8 @@ const OcCurrentOrderLineItemList: FunctionComponent<OcCurrentOrderLineItemListPr
   editable,
   productType,
   lineItems,
-  onChange
+  onChange,
+  tabIndex
 }) => {
   let productItems = lineItems
   if (productType != null) {
@@ -30,6 +32,7 @@ const OcCurrentOrderLineItemList: FunctionComponent<OcCurrentOrderLineItemListPr
       editable={editable}
       lineItems={productItems}
       onChange={onChange}
+      tabIndex={tabIndex}
     />
   )
 }

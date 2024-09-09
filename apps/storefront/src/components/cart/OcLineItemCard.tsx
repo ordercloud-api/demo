@@ -1,6 +1,5 @@
 import {
   Button,
-  ButtonGroup,
   Center,
   HStack,
   Heading,
@@ -17,31 +16,33 @@ import {
   Textarea,
   VStack,
 } from "@chakra-ui/react";
-import { Link as RouterLink } from "react-router-dom";
-import {
+import { Cart, LineItem } from "ordercloud-javascript-sdk";
+import React, {
   FunctionComponent,
   useCallback,
   useEffect,
   useMemo,
   useState,
 } from "react";
-import { Cart, LineItem } from "ordercloud-javascript-sdk";
-import React from "react";
+import { TbPhoto } from "react-icons/tb";
+import { Link as RouterLink } from "react-router-dom";
+import useDebounce from "../../hooks/useDebounce";
 import formatPrice from "../../utils/formatPrice";
 import OcQuantityInput from "./OcQuantityInput";
-import useDebounce from "../../hooks/useDebounce";
-import { TbPhoto } from "react-icons/tb";
+import { TABS } from "./ShoppingCart";
 
 interface OcLineItemCardProps {
   lineItem: LineItem;
   editable?: boolean;
   onChange?: (newLi: LineItem) => void;
+  tabIndex?: number;
 }
 
 const OcLineItemCard: FunctionComponent<OcLineItemCardProps> = ({
   lineItem,
   editable,
   onChange,
+  tabIndex,
 }) => {
   const [quantity, _setQuantity] = useState(lineItem.Quantity);
 
@@ -80,44 +81,55 @@ const OcLineItemCard: FunctionComponent<OcLineItemCardProps> = ({
     <>
       <HStack
         id="lineItemRow"
-        flexWrap="wrap"
+        flexWrap={{ base: "wrap", lg: "nowrap" }}
         p={{ base: 3, md: "unset" }}
         gap={9}
         w="full"
       >
-        <Center
-          bgColor="chakra-subtle-bg"
-          aspectRatio="1 / 1"
-          objectFit="cover"
-          boxSize="80px"
-          rounded="md"
-        >
-          {lineItem?.Product?.xp?.Images ? (
-            <Image
-              rounded="md"
-              boxSize="full"
-              objectFit="cover"
-              src={lineItem?.Product?.xp?.Images[0].Url}
-              zIndex={1}
-              onError={(e) => {
-                e.currentTarget.src = ""; // Prevent the broken image from rendering
-                e.currentTarget.style.display = "none"; // Hide the broken image
-              }}
+        <VStack alignItems="flex-start" gap={0}>
+          <Center
+            bgColor="chakra-subtle-bg"
+            aspectRatio="1 / 1"
+            objectFit="cover"
+            boxSize="80px"
+            rounded="md"
+          >
+            {lineItem?.Product?.xp?.Images ? (
+              <Image
+                rounded="md"
+                boxSize="full"
+                objectFit="cover"
+                src={lineItem?.Product?.xp?.Images[0].Url}
+                zIndex={1}
+                onError={(e) => {
+                  e.currentTarget.src = ""; // Prevent the broken image from rendering
+                  e.currentTarget.style.display = "none"; // Hide the broken image
+                }}
+              />
+            ) : (
+              <Icon fontSize="2rem" color="gray.300" as={TbPhoto} />
+            )}
+            <Icon
+              fontSize="2rem"
+              color="gray.300"
+              as={TbPhoto}
+              position="absolute"
             />
-          ) : (
-            <Icon fontSize="2rem" color="gray.300" as={TbPhoto} />
+          </Center>
+          {tabIndex !== TABS.CONFIRMATION && (
+            <Button
+              size="xs"
+              fontSize=".75rem"
+              variant="link"
+              colorScheme="accent"
+            >
+              Remove
+            </Button>
           )}
-          <Icon
-            fontSize="2rem"
-            color="gray.300"
-            as={TbPhoto}
-            position="absolute"
-          />
-        </Center>
-
+        </VStack>
         <VStack alignItems="flex-start" gap={3} flexGrow="1">
           <Link as={RouterLink} to={`/products/${lineItem?.Product?.ID}`}>
-            <Text fontSize="md" display="inline-block" maxW="md">
+            <Text fontSize="sm" lineHeight="1.3" display="inline-block">
               {lineItem.Product?.Name}
             </Text>
           </Link>
@@ -139,8 +151,6 @@ const OcLineItemCard: FunctionComponent<OcLineItemCardProps> = ({
               </Text>
             </React.Fragment>
           ))}
-
-          <ButtonGroup spacing="3" alignItems="center"></ButtonGroup>
         </VStack>
         {editable ? (
           <VStack alignItems="flex-start">
@@ -152,14 +162,16 @@ const OcLineItemCard: FunctionComponent<OcLineItemCardProps> = ({
                 onChange={_setQuantity}
               />
             )}
-            <Button size="xs" fontSize=".75rem" variant="link">
-              Remove
-            </Button>
           </VStack>
         ) : (
-          <Text ml="auto">Qty: {lineItem.Quantity}</Text>
+          <Text ml="auto" color="chakra-subtle-text">
+            Qty:{" "}
+            <Text as="span" fontWeight="bold" color="chakra-body-text">
+              {lineItem.Quantity}
+            </Text>
+          </Text>
         )}
-        <VStack minW="85px" alignItems="flex-end">
+        <VStack minW="75px" alignItems="flex-end" gap="0">
           <Text fontWeight="600" fontSize="lg">
             {lineSubtotal}
           </Text>
