@@ -39,20 +39,23 @@ export async function listMeProducts(
     url += `&filters=${filters}`;
   }
 
-  const ocListPage = await fetch(`${url}`, {
+  const ocListPage = await (await fetch(`${url}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
       "Authorization": `Bearer ${token}`
     },
-  });
+  })).json();
 
-  const response = await getAllPcmProduct(request.query.get("ids").split(","));
+  const listPageIds: string[] = ocListPage.Items.map(x => String(x.ID));
+  const response = await getAllPcmProduct(listPageIds);
+
+  console.log('TEST RESPONSE', JSON.stringify(response.pcmProducts));
 
   return { body: JSON.parse(JSON.stringify(response.pcmProducts)) };
 }
 
-app.http("me/products", {
+app.http("products", {
   methods: ["GET"],
   authLevel: "anonymous",
   handler: listMeProducts,
