@@ -54,9 +54,7 @@ export async function listMeProducts(
 
     return {
       ...item,
-      ContentHub: {
-        ProductName: mPcmPrdouct.productName
-      }
+      ContentHub: mPcmPrdouct
     }
   })
 
