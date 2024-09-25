@@ -49,10 +49,18 @@ export async function listMeProducts(
 
   const listPageIds: string[] = ocListPage.Items.map(x => String(x.ID));
   const response = await getAllPcmProduct(listPageIds);
+  const modifiedListPageItems = ocListPage.Items.map(item => {
+    const mPcmPrdouct = response.pcmProducts.find(x => x.orderCloudID == item.ID)
 
-  console.log('TEST RESPONSE', JSON.stringify(response.pcmProducts));
+    return {
+      ...item,
+      ContentHub: {
+        ProductName: mPcmPrdouct.productName
+      }
+    }
+  })
 
-  return { body: JSON.parse(JSON.stringify(response.pcmProducts)) };
+  return { jsonBody: {Meta: ocListPage.Meta, Items: modifiedListPageItems} };
 }
 
 app.http("products", {
