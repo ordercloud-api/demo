@@ -20,13 +20,11 @@ import {
 } from "ordercloud-javascript-sdk";
 import pluralize from "pluralize";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { IS_MULTI_LOCATION_INVENTORY } from "../../constants";
 import formatPrice from "../../utils/formatPrice";
 import OcQuantityInput from "../cart/OcQuantityInput";
 import ProductImageGallery from "./product-detail/ProductImageGallery";
 import {
-  useOcResourceGet,
   useOcResourceList,
   useShopper,
 } from "@rwatt451/ordercloud-react";
@@ -37,11 +35,23 @@ export interface ProductDetailProps {
   renderProductDetail?: (product: BuyerProduct) => JSX.Element;
 }
 
+const useProductImages = (product?:BuyerProduct<{ContentHub:any}>) => {
+  if (!product) return [];
+  return product.xp?.ContentHub?.pCMProductToAsset.results.map((r:any) => {
+    const urls = r.urls;
+    if (urls && Object.keys(urls).length) {
+      return {
+        ThumbnailUrl: (Object.values(urls).find((u:any) => u.resource === 'thumbnail') as any).url,
+        OriginalUrl: (Object.values(urls).find((u:any) => u.resource === 'downloadOriginal') as any).url
+      }
+    }
+  })
+}
+
 const ProductDetail: React.FC<ProductDetailProps> = ({
   productId,
   renderProductDetail,
 }) => {
-  const navigate = useNavigate();
   const toast = useToast();
   const [activeRecordId, setActiveRecordId] = useState<string>();
   const { data: product, isLoading: loading } = useOcCompositeProduct<BuyerProduct<{ContentHub:any}>>(
@@ -95,6 +105,9 @@ const ProductDetail: React.FC<ProductDetailProps> = ({
         ProductID: productId,
         Quantity: quantity,
         InventoryRecordID: activeRecordId,
+        xp: {
+          ContentHub: product.xp.ContentHub
+        }
       });
       setAddingToCart(false);
       toast({
@@ -103,7 +116,7 @@ const ProductDetail: React.FC<ProductDetailProps> = ({
         duration: 5000,
         isClosable: true,
       });
-      navigate("/cart");
+      // navigate("/cart");
     } catch (error) {
       setAddingToCart(false);
       if (error instanceof OrderCloudError) {
@@ -127,7 +140,9 @@ const ProductDetail: React.FC<ProductDetailProps> = ({
         });
       }
     }
-  }, [product, activeRecordId, productId, toast, addCartLineItem, quantity, navigate]);
+  }, [product, activeRecordId, productId, toast, addCartLineItem, quantity]);
+
+  const productImages = useProductImages(product); // formats images for ProductImageGallery
 
   return loading ? (
     <Center h="50vh">
@@ -144,7 +159,7 @@ const ProductDetail: React.FC<ProductDetailProps> = ({
         w="full"
         maxW="container.4xl"
       >
-        <ProductImageGallery images={product.xp?.Images || []} />
+        <ProductImageGallery images={productImages} />
         <VStack alignItems="flex-start" maxW="4xl" gap={4}>
           <Heading maxW="2xl" size="xl">
             {product.Name}

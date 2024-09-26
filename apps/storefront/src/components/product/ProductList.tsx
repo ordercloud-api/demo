@@ -32,8 +32,7 @@ import FilterSearchMenu, {
 } from "../shared/search/SearchMenu";
 import FacetList from "./facets/FacetList";
 import ProductCard from "./ProductCard";
-import { useOcResourceListWithFacets } from "@rwatt451/ordercloud-react";
-import useCompositeProducts, {
+import {
   useOcCompositeProducts,
 } from "../../hooks/useCompositeProducts";
 

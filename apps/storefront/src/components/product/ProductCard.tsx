@@ -15,10 +15,27 @@ import { Link as RouterLink } from "react-router-dom";
 import formatPrice from "../../utils/formatPrice";
 
 interface ProductCardProps {
-  product: BuyerProduct;
+  product: BuyerProduct<{ContentHub:any}>;
+}
+
+
+//TODO: needs work - should probably always be the same (see useProductImages on detail)
+export const useDefaultProductImages = (product:BuyerProduct<{ContentHub:any}>) => {
+  const urls = product.xp?.ContentHub?.pCMProductToAsset.results[0].urls;
+  if (urls && Object.keys(urls).length) {
+    return {
+      thumbnail: Object.values(urls).find((u:any) => u.resource === 'thumbnail') as any,
+      original: Object.values(urls).find((u:any) => u.resource === 'downloadOriginal') as any
+    }
+  }
+  return {
+    thumbnail: null,
+    original: null,
+  }
 }
 
 const ProductCard: FunctionComponent<ProductCardProps> = ({ product }) => {
+  const {thumbnail} = useDefaultProductImages(product);
   return (
     <>
       {product && (
@@ -56,16 +73,13 @@ const ProductCard: FunctionComponent<ProductCardProps> = ({ product }) => {
                 maxH="300px"
                 borderTopRadius="md"
               >
-                {product.xp?.Images &&
-                (product.xp.Images[0]?.ThumbnailUrl ||
-                  product.xp.Images[0]?.Url) ? (
+                {thumbnail && thumbnail.url ? (
                   <Image
                     borderTopRadius="md"
                     boxSize="full"
                     objectFit="cover"
                     src={
-                      product.xp.Images[0]?.ThumbnailUrl ||
-                      product.xp.Images[0]?.Url
+                      thumbnail.url
                     }
                     zIndex={1}
                     bgColor="white"
