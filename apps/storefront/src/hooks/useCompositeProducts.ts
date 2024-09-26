@@ -82,8 +82,8 @@ export function useOcCompositeProducts<TData>(
 
   const axiosRequest: AxiosRequestConfig = {
     method: "GET",
-    baseURL: MIDDLEWARE_BASE_API_URL,
-    headers: { Authorization: `Bearer ${token}`, 'x-oc-base-url': baseApiUrl },
+    baseURL: MIDDLEWARE_BASE_API_URL,    
+    headers: { Authorization: `Bearer ${token}`, 'x-oc-base-url': baseApiUrl, 'Access-Control-Allow-Origin': '*' },
   };
 
   return useAuthQuery({
@@ -98,6 +98,37 @@ export function useOcCompositeProducts<TData>(
     disabled: !isAuthenticated,
   }) as UseQueryResult<
     RequiredDeep<ListPageWithFacets<TData>>,
+    OrderCloudError
+  >;
+}
+
+export function useOcCompositeProduct<TData>(
+  productId: string
+) {
+  // const { listOperation } = useOperations(resource);
+  // if(!listOperation) throwOperationNotFoundError("List", resource)
+  const { token, isAuthenticated, baseApiUrl } = useOrderCloudContext();
+
+  const url = `/products/${productId}`;
+
+  const axiosRequest: AxiosRequestConfig = {
+    method: "GET",
+    baseURL: MIDDLEWARE_BASE_API_URL,    
+    headers: { Authorization: `Bearer ${token}`, 'x-oc-base-url': baseApiUrl, 'Access-Control-Allow-Origin': '*' },
+  };
+
+  return useAuthQuery({
+    queryKey: ["composite.product", productId],
+    queryFn: async () => {
+      const resp = await axios.get<TData>(
+        url,
+        axiosRequest
+      );
+      return resp.data;
+    },
+    disabled: !isAuthenticated,
+  }) as UseQueryResult<
+    RequiredDeep<TData>,
     OrderCloudError
   >;
 }

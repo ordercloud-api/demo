@@ -30,6 +30,7 @@ import {
   useOcResourceList,
   useShopper,
 } from "@rwatt451/ordercloud-react";
+import { useOcCompositeProduct } from "../../hooks/useCompositeProducts";
 
 export interface ProductDetailProps {
   productId: string;
@@ -43,9 +44,8 @@ const ProductDetail: React.FC<ProductDetailProps> = ({
   const navigate = useNavigate();
   const toast = useToast();
   const [activeRecordId, setActiveRecordId] = useState<string>();
-  const { data: product, isLoading: loading } = useOcResourceGet<BuyerProduct>(
-    "Me.Products",
-    { productID: productId }
+  const { data: product, isLoading: loading } = useOcCompositeProduct<BuyerProduct<{ContentHub:any}>>(
+    productId
   );
   const { data: inventoryRecords } = useOcResourceList<InventoryRecord>(
     "Me.ProductInventoryRecords",
