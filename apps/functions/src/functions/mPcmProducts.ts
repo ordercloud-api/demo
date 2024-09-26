@@ -1,6 +1,7 @@
 import {
   app,
   HttpRequest,
+  HttpResponse,
   HttpResponseInit,
   InvocationContext,
 } from "@azure/functions";
@@ -11,39 +12,21 @@ export async function listMeProducts(
   context: InvocationContext
 ): Promise<HttpResponseInit> {
   context.log(`Http function processed request for url "${request.url}"`);
-  const ocApiUrl = "https://useast-sandbox.ordercloud.io";
-  const token = request.headers.get("token");
-  const search = request.query.get("search");
-  const searchOn = request.query.get("searchOn");
-  const page = request.query.get("page");
-  const pageSize = request.query.get("pageSize");
-  const filters = request.query.get("filters");
-
-  let url = `${ocApiUrl}/v1/me/products`;
-  if (search != null) url += `?search=${search}`;
-  if (search != null && searchOn !== null) url += `&searchOn=${searchOn}`;
-  if (search != null && page !== null) {
-    url += `&page=${page}`;
-  } else if (page != null) {
-    url += `page=${page}`;
-  }
-  if ((search != null || page != null) && pageSize != null) {
-    url += `&pageSize=${pageSize}`;
-  } else if (search == null && page == null && pageSize != null) {
-    url += `pageSize=${pageSize}`;
-  }
-  if (
-    (search != null || searchOn != null || page != null || pageSize != null) &&
-    filters != null
-  ) {
-    url += `&filters=${filters}`;
+  const ocApiUrl = request.headers.get("x-oc-base-url");
+  const authHeader = request.headers.get("Authorization");
+  if (!authHeader) {
+    const response = new HttpResponse({status: 401, jsonBody: {message: "Inavlid or expired token"}});
+    return response;
   }
 
-  const ocListPage = await (await fetch(`${url}`, {
+  const queryString = request.query.toString();
+  const url = `${ocApiUrl}/v1/me/products${queryString.length ? `?${queryString}` : ''}`;
+
+  const ocListPage = await (await fetch(url, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
-      "Authorization": `Bearer ${token}`
+      "Authorization": authHeader
     },
   })).json();
 
@@ -54,7 +37,10 @@ export async function listMeProducts(
 
     return {
       ...item,
-      ContentHub: mPcmPrdouct
+      xp: {
+        ...item.xp,
+        ContentHub: mPcmPrdouct
+      }
     }
   })
 

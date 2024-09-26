@@ -33,6 +33,9 @@ import FilterSearchMenu, {
 import FacetList from "./facets/FacetList";
 import ProductCard from "./ProductCard";
 import { useOcResourceListWithFacets } from "@rwatt451/ordercloud-react";
+import useCompositeProducts, {
+  useOcCompositeProducts,
+} from "../../hooks/useCompositeProducts";
 
 export interface ProductListProps {
   renderItem?: (product: BuyerProduct) => JSX.Element;
@@ -67,16 +70,15 @@ const ProductList: FunctionComponent<ProductListProps> = ({ renderItem }) => {
     return filtersObj;
   }, [searchParams]);
 
-  const { data, isLoading } = useOcResourceListWithFacets<BuyerProduct>(
-    "Me.Products",
-    {
-      search: searchTerm,
-      page: currentPage.toString(),
-      catalogId,
-      categoryId,
-      ...filters,
-    }
-  );
+  const { data, isLoading } = useOcCompositeProducts<
+    BuyerProduct<{ ContentHub: any }>
+  >({
+    search: searchTerm,
+    page: currentPage.toString(),
+    catalogId,
+    categoryId,
+    ...filters,
+  });
 
   const handleRoutingChange = useCallback(
     (queryKey: string, resetPage?: boolean, index?: number) =>
