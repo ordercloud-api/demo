@@ -9,7 +9,6 @@ import {
   IconButton,
   Menu,
   MenuButton,
-  MenuIcon,
   MenuItem,
   MenuList,
   Text,
