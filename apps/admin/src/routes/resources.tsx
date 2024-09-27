@@ -73,7 +73,7 @@ export const resources: ResourceRoute[] = [
       {
         path: `/orders/:direction/:orderID/promotions`,
         element: (
-          <ResourceList resourceName="OrderPromotions" readOnly={true} />
+          <ResourceList resourceName="OrderPromotions" readOnly={true} hrefResolver={((item:any) => `../../promotions/${item.ID}`)} />
         ),
       },
       {
