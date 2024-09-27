@@ -21,7 +21,7 @@ interface ProductCardProps {
 
 //TODO: needs work - should probably always be the same (see useProductImages on detail)
 export const useDefaultProductImages = (product:BuyerProduct<{ContentHub:any}>) => {
-  const urls = product.xp?.ContentHub?.pCMProductToAsset.results[0].urls;
+  const urls = product.xp?.ContentHub?.pCMProductToAsset.results[0]?.urls;
   if (urls && Object.keys(urls).length) {
     return {
       thumbnail: Object.values(urls).find((u:any) => u.resource === 'thumbnail') as any,
