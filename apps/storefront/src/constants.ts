@@ -5,6 +5,9 @@ const APP_NAME = import.meta.env.VITE_APP_NAME || "Application Name";
 const BASE_API_URL =
   import.meta.env.VITE_APP_ORDERCLOUD_BASE_API_URL ||
   "https://api.ordercloud.io/v1";
+const MIDDLEWARE_BASE_API_URL =
+  import.meta.env.VITE_APP_MIDDLEWARE_BASE_API_URL ||
+  "http://localhost:7071/api";
 const CLIENT_ID = import.meta.env.VITE_APP_ORDERCLOUD_CLIENT_ID;
 const SCOPE_STRING = import.meta.env.VITE_APP_ORDERCLOUD_SCOPE;
 const CUSTOM_SCOPE_STRING = import.meta.env.VITE_APP_ORDERCLOUD_CUSTOM_SCOPE;
@@ -70,6 +73,7 @@ const DASHBOARD_TERTIARY_CTA_LINK = import.meta.env
 export {
   APP_NAME,
   BASE_API_URL,
+  MIDDLEWARE_BASE_API_URL,
   CLIENT_ID,
   SCOPE,
   CUSTOM_SCOPE,

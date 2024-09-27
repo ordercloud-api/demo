@@ -37,6 +37,20 @@ interface OcLineItemCardProps {
   onChange?: (newLi: LineItem) => void;
 }
 
+export const useDefaultProductImages = (li:LineItem<{ContentHub:any}>) => {
+  const urls = li.xp?.ContentHub?.pCMProductToAsset.results[0].urls;
+  if (urls && Object.keys(urls).length) {
+    return {
+      thumbnail: Object.values(urls).find((u:any) => u.resource === 'thumbnail') as any,
+      original: Object.values(urls).find((u:any) => u.resource === 'downloadOriginal') as any
+    }
+  }
+  return {
+    thumbnail: null,
+    original: null,
+  }
+}
+
 const OcLineItemCard: FunctionComponent<OcLineItemCardProps> = ({
   lineItem,
   editable,
@@ -80,6 +94,9 @@ const OcLineItemCard: FunctionComponent<OcLineItemCardProps> = ({
     return formatPrice(lineItem.UnitPrice);
   }, [lineItem]);
 
+  const {thumbnail} = useDefaultProductImages(lineItem)
+  
+
   return (
     <>
       <HStack
@@ -97,12 +114,12 @@ const OcLineItemCard: FunctionComponent<OcLineItemCardProps> = ({
             boxSize="80px"
             rounded="md"
           >
-            {lineItem?.Product?.xp?.Images ? (
+            {thumbnail?.url ? (
               <Image
                 rounded="md"
                 boxSize="full"
                 objectFit="cover"
-                src={lineItem?.Product?.xp?.Images[0].Url}
+                src={thumbnail.url}
                 zIndex={1}
                 onError={(e) => {
                   e.currentTarget.src = ""; // Prevent the broken image from rendering

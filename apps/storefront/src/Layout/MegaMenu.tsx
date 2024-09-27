@@ -76,9 +76,9 @@ const MegaMenu: FC<MegaMenuProps> = ({
   const catalogs = useMemo(() => catalogResult?.Items, [catalogResult]);
   const categories = useMemo(() => categoryResult?.Items, [categoryResult]);
 
-  const handleCategoryClick = (categoryId: string | undefined) => {
-    if (!categoryId || !selectedCatalog) return;
-    navigate(`/shop/${selectedCatalog}/categories/${categoryId}`);
+  const handleCategoryClick = (category: Category) => {
+    if (!category.ID || !selectedCatalog) return;
+    navigate(`/shop/${selectedCatalog}/categories/${category.ID}${category.ChildCount ? '' : '/products'}`)
     onClose();
   };
 
@@ -136,7 +136,7 @@ const MegaMenu: FC<MegaMenuProps> = ({
                 variant="ghost"
                 w="full"
                 justifyContent="start"
-                onClick={() => handleCategoryClick(category.ID)}
+                onClick={() => handleCategoryClick(category)}
               >
                 {category.Name}
               </Button>
