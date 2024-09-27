@@ -91,7 +91,6 @@ const MegaMenu: FC<MegaMenuProps> = ({
   return (
     <Container
       as={SlideFade}
-      minH="20vh"
       maxH="45vh"
       display="flex"
       flexDirection="column"

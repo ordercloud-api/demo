@@ -1,4 +1,4 @@
-import { ChevronDownIcon } from "@chakra-ui/icons";
+import { ChevronDownIcon, HamburgerIcon } from "@chakra-ui/icons";
 import {
   Box,
   Button,
@@ -6,8 +6,10 @@ import {
   Heading,
   HStack,
   Icon,
+  IconButton,
   Menu,
   MenuButton,
+  MenuIcon,
   MenuItem,
   MenuList,
   Text,
@@ -99,7 +101,7 @@ const MainMenu: FC<MainMenuProps> = ({ loginDisclosure }) => {
           to={`/shop/${catalogs[0].ID}/products`}
           variant="ghost"
         >
-          Shop All Products
+          Shop All
         </Button>
       );
     }
@@ -124,20 +126,23 @@ const MainMenu: FC<MainMenuProps> = ({ loginDisclosure }) => {
     >
       <Container h="100%" maxW="full">
         <HStack h="100%" justify="flex-start" alignItems="center">
-          <RouterLink to="/">
-            <DEFAULT_BRAND h="10" />
-          </RouterLink>
-          <HStack as="nav" flexGrow="1" ml={3}>
-            <Button
+          <HStack as="nav" flexGrow="1">
+            <IconButton
+              icon={<HamburgerIcon />}
+              aria-label="Categories"
               isActive={megaMenuDisclosure.isOpen}
               size="sm"
               variant="ghost"
               onClick={megaMenuDisclosure.onToggle}
             >
               Categories
-            </Button>
+            </IconButton>
+            <RouterLink to="/">
+              <DEFAULT_BRAND h="10" />
+            </RouterLink>
             {renderCatalogMenu()}
           </HStack>
+
           <HStack>
             {isLoggedIn && (
               <Heading size="sm">
