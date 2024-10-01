@@ -70,7 +70,7 @@ const ProductCard: FunctionComponent<ProductCardProps> = ({ product }) => {
                 aspectRatio="1 / 1"
                 objectFit="cover"
                 boxSize="100%"
-                maxH="300px"
+                maxH="250px"
                 borderTopRadius="md"
               >
                 {thumbnail && thumbnail.url ? (
@@ -103,7 +103,7 @@ const ProductCard: FunctionComponent<ProductCardProps> = ({ product }) => {
                 <Text fontSize="xs" color="chakra-subtle-text">
                   {product.ID}
                 </Text>
-                <Heading size="lg">{product.Name}</Heading>
+                <Heading size="md">{product.Name}</Heading>
                 {product.PriceSchedule?.PriceBreaks && (
                   <Text fontSize="md" fontWeight="normal">
                     {formatPrice(

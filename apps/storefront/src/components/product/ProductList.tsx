@@ -179,7 +179,7 @@ const ProductList: FunctionComponent<ProductListProps> = ({ renderItem }) => {
         <SimpleGrid
           as={GridItem}
           w="full"
-          gridTemplateColumns="repeat(auto-fill, minmax(270px, 1fr))"
+          gridTemplateColumns="repeat(auto-fill, minmax(225px, 1fr))"
           spacing={4}
         >
           {data?.Items?.map((p) => (

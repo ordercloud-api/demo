@@ -18,6 +18,7 @@ import {
   Tr,
   useColorMode,
   VStack,
+  chakra,
 } from '@chakra-ui/react'
 import { BiConfused } from 'react-icons/bi'
 import { UseQueryResult } from '@tanstack/react-query'
@@ -238,6 +239,17 @@ const DataTable = <T extends IDefaultResource>({
         {itemActions && (
           <Th
             key={headerGroup.id}
+            borderInline="1px"
+            zIndex="10"
+            py="0"
+            background="chakra-body-bg"
+            _last={{ borderRightWidth: '0px !important' }}
+            borderTop="0px"
+            borderLeft="0px"
+            borderColor={colorMode === 'dark' ? 'gray.700' : 'gray.100'}
+            verticalAlign="baseline"
+            position="sticky"
+            left={0}
             borderBottomWidth="0px !important"
           ></Th>
         )}
@@ -267,6 +279,9 @@ const DataTable = <T extends IDefaultResource>({
           {itemActions && (
             <Td
               shadow="sm"
+              zIndex={1}
+              py={0}
+              pr={3}
               marginBlock="-2px"
               backgroundColor={`${colorMode === 'dark' ? 'gray.800' : 'white'} !important`}
               position="sticky"
@@ -329,7 +344,7 @@ const DataTable = <T extends IDefaultResource>({
   return !query.data && query.isLoading ? null : (
     <>
       {noResults ? (
-        <Center minH="75vh">
+        <Center minH="50vh">
           <VStack
             gap={0}
             color="chakra-subtle-text"

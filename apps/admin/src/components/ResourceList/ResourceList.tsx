@@ -255,7 +255,7 @@ const ResourceList: FC<ResourceListProps> = ({ resourceName, readOnly, hrefResol
             <Flex
               direction="column"
               wrap="nowrap"
-              h="calc(100vh - 100px)"
+              h="calc(100vh - 100px)" //TODO: This is causing some poor scrolling on detail pages with resource list under one of the tabs
               overflow="hidden"
             >
               <Box

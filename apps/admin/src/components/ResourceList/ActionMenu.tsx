@@ -38,6 +38,7 @@ const ActionMenu: FC<IActionMenu> = ({
           isLazy
           onOpen={onOpen}
           onClose={onClose}
+          offset={[0,12]}
           strategy="absolute"
           placement="left-start"
           boundary="scrollParent"

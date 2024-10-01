@@ -119,7 +119,7 @@ const ResourceDetail: FC<IResourceDetail> = ({
     <>
       <VStack
         position="sticky"
-        top="0"
+        top="34px"
         zIndex={1}
         background="chakra-body-bg"
         alignItems={navigationItems?.length ? 'start' : 'center'}
