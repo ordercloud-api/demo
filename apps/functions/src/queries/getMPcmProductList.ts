@@ -1,10 +1,10 @@
-import { IAllMPcmProductResponse, IMPcmProduct } from "../models/mPcmProduct";
+import { IAllMPcmProductResponse, IMPcmProduct } from "../models/mPcmProduct.model";
 import { fetchGraphQL } from "../services/fetchGraphQL";
 
 const allMPcmProductQuery = (ids: string[]) => `
 {
-  allM_PCM_Product(where:	{orderCloudID_anyOf:${ids}}) {
-    results{
+  allM_PCM_Product(where:	{orderCloudID_anyOf:[${`"${ids.join("\",\"")}"`}]}, first: 100) {
+    results {
       orderCloudID
       productName
       productShortDescription

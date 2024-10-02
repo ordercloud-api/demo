@@ -4,8 +4,8 @@ type IGraphQLResponseWithErrors = {
 
 export async function fetchGraphQL<T = void>(query: string): Promise<T> {
   // If there's a development variable, use it, or use production, or default to empty string in last case
-  const apiKey = "some-app-setting-needs-to-go-here";
-  const endpointUrl = "some-app-setting-needs-to-go-here";
+  const apiKey = "cm4xckRQM1hDd1ArdEtBYzRheTRCVVRhZ2YvWXNBcFowc1pwNDlBQjhjOD18ZGotc2FuZGJveDgwOTg2MDFm";
+  const endpointUrl = "https://dj-sandbox.sitecoresandbox.cloud/api/graphql/preview/v1";
   try {
     return await fetch(endpointUrl, {
       method: "POST",
